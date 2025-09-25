@@ -75,7 +75,12 @@ function AdvancedPhone.new()
     }
     
     -- Initialize the system
-    self:createAdvancedGUI()
+    local guiSuccess = self:createAdvancedGUI()
+    if not guiSuccess then
+        warn("Failed to create GUI!")
+        return nil
+    end
+    
     self:setupAdvancedVoiceChat()
     self:setupAdvancedEventHandlers()
     self:initializeNotificationSystem()
@@ -86,6 +91,12 @@ end
 
 -- Create Advanced GUI Structure
 function AdvancedPhone:createAdvancedGUI()
+    -- Validate player and PlayerGui
+    if not self.player or not self.player.PlayerGui then
+        warn("Player or PlayerGui not found!")
+        return false
+    end
+    
     -- Main ScreenGui with enhanced properties
     self.screenGui = Instance.new("ScreenGui")
     self.screenGui.Name = "AdvancedPhoneSystem"
@@ -100,7 +111,7 @@ function AdvancedPhone:createAdvancedGUI()
     local scale = math.min(screenSize.X / baseResolution.X, screenSize.Y / baseResolution.Y)
     scale = math.max(0.4, math.min(1.5, scale))
     
-    self.scale = scale
+    self.scale = scale or 1 -- Default scale if nil
     
     -- Enhanced Toggle Button with glow effect
     self.toggleButton = Instance.new("ImageButton")
@@ -131,7 +142,7 @@ function AdvancedPhone:createAdvancedGUI()
     toggleIcon.Position = UDim2.new(0.1, 0, 0.1, 0)
     toggleIcon.BackgroundTransparency = 1
     toggleIcon.Text = "📱"
-    toggleIcon.TextColor3 = Color3.white
+    toggleIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
     toggleIcon.TextScaled = true
     toggleIcon.Font = Enum.Font.GothamBold
     toggleIcon.ZIndex = 11
@@ -227,6 +238,8 @@ function AdvancedPhone:createAdvancedGUI()
     
     -- Setup device-specific controls
     self:setupDeviceControls()
+    
+    return true
 end
 
 -- Create Enhanced Status Bar
@@ -260,7 +273,7 @@ function AdvancedPhone:createEnhancedStatusBar(parent, scale)
     timeLabel.Position = UDim2.new(0, 15, 0, 0)
     timeLabel.BackgroundTransparency = 1
     timeLabel.Text = os.date("%H:%M")
-    timeLabel.TextColor3 = Color3.white
+    timeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     timeLabel.TextScaled = true
     timeLabel.Font = Enum.Font.GothamBold
     timeLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -287,7 +300,7 @@ function AdvancedPhone:createEnhancedStatusBar(parent, scale)
     notifIcon.Size = UDim2.new(0, 30 * scale, 0, 30 * scale)
     notifIcon.BackgroundTransparency = 1
     notifIcon.Text = "🔔"
-    notifIcon.TextColor3 = Color3.white
+    notifIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
     notifIcon.TextScaled = true
     notifIcon.ZIndex = 8
     notifIcon.Parent = iconsFrame
@@ -297,7 +310,7 @@ function AdvancedPhone:createEnhancedStatusBar(parent, scale)
     voiceIcon.Size = UDim2.new(0, 30 * scale, 0, 30 * scale)
     voiceIcon.BackgroundTransparency = 1
     voiceIcon.Text = self.settings.voiceEnabled and "🎤" or "🔇"
-    voiceIcon.TextColor3 = Color3.white
+    voiceIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
     voiceIcon.TextScaled = true
     voiceIcon.ZIndex = 8
     voiceIcon.Parent = iconsFrame
@@ -307,7 +320,7 @@ function AdvancedPhone:createEnhancedStatusBar(parent, scale)
     signalIcon.Size = UDim2.new(0, 30 * scale, 0, 30 * scale)
     signalIcon.BackgroundTransparency = 1
     signalIcon.Text = "📶"
-    signalIcon.TextColor3 = Color3.white
+    signalIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
     signalIcon.TextScaled = true
     signalIcon.ZIndex = 8
     signalIcon.Parent = iconsFrame
@@ -324,7 +337,7 @@ function AdvancedPhone:createEnhancedStatusBar(parent, scale)
     batteryIcon.Position = UDim2.new(0, 0, 0, 0)
     batteryIcon.BackgroundTransparency = 1
     batteryIcon.Text = "🔋"
-    batteryIcon.TextColor3 = Color3.white
+    batteryIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
     batteryIcon.TextScaled = true
     batteryIcon.ZIndex = 8
     batteryIcon.Parent = batteryFrame
@@ -334,7 +347,7 @@ function AdvancedPhone:createEnhancedStatusBar(parent, scale)
     batteryPercent.Position = UDim2.new(0.6, 0, 0, 0)
     batteryPercent.BackgroundTransparency = 1
     batteryPercent.Text = "100%"
-    batteryPercent.TextColor3 = Color3.white
+    batteryPercent.TextColor3 = Color3.fromRGB(255, 255, 255)
     batteryPercent.TextScaled = true
     batteryPercent.Font = Enum.Font.Gotham
     batteryPercent.ZIndex = 8
@@ -419,10 +432,10 @@ function AdvancedPhone:createEnhancedHomeScreen(parent, scale)
         local appGradient = Instance.new("UIGradient")
         appGradient.Color = ColorSequence.new{
             ColorSequenceKeypoint.new(0, appData.color),
-            ColorSequenceKeypoint.new(1, Color3.new(
-                appData.color.R * 0.7,
-                appData.color.G * 0.7,
-                appData.color.B * 0.7
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(
+                math.floor(appData.color.R * 255 * 0.7),
+                math.floor(appData.color.G * 255 * 0.7),
+                math.floor(appData.color.B * 255 * 0.7)
             ))
         }
         appGradient.Rotation = 45
@@ -450,7 +463,7 @@ function AdvancedPhone:createEnhancedHomeScreen(parent, scale)
         appIcon.Position = UDim2.new(0, 0, 0, 0)
         appIcon.BackgroundTransparency = 1
         appIcon.Text = appData.icon
-        appIcon.TextColor3 = Color3.white
+        appIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
         appIcon.TextScaled = true
         appIcon.Font = Enum.Font.GothamBold
         appIcon.ZIndex = 8
@@ -461,7 +474,7 @@ function AdvancedPhone:createEnhancedHomeScreen(parent, scale)
         appLabel.Position = UDim2.new(0, 5, 0.7, 0)
         appLabel.BackgroundTransparency = 1
         appLabel.Text = appData.name
-        appLabel.TextColor3 = Color3.white
+        appLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
         appLabel.TextScaled = true
         appLabel.Font = Enum.Font.Gotham
         appLabel.ZIndex = 8
@@ -510,7 +523,7 @@ function AdvancedPhone:createEnhancedAppsContainer(parent, scale)
     backButton.BackgroundColor3 = Color3.fromRGB(33, 150, 243)
     backButton.BorderSizePixel = 0
     backButton.Text = "←"
-    backButton.TextColor3 = Color3.white
+    backButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     backButton.TextScaled = true
     backButton.Font = Enum.Font.GothamBold
     backButton.ZIndex = 7
@@ -566,7 +579,7 @@ function AdvancedPhone:createBottomNavigation(parent, scale)
         quickButton.BackgroundColor3 = self.apps[appName].color
         quickButton.BorderSizePixel = 0
         quickButton.Text = self.apps[appName].icon
-        quickButton.TextColor3 = Color3.white
+        quickButton.TextColor3 = Color3.fromRGB(255, 255, 255)
         quickButton.TextScaled = true
         quickButton.Font = Enum.Font.GothamBold
         quickButton.ZIndex = 8
@@ -794,7 +807,7 @@ function AdvancedPhone:showNotificationPopup(title, message, type)
     titleLabel.Position = UDim2.new(0, 10, 0, 5)
     titleLabel.BackgroundTransparency = 1
     titleLabel.Text = title
-    titleLabel.TextColor3 = Color3.white
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     titleLabel.TextScaled = true
     titleLabel.Font = Enum.Font.GothamBold
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -806,7 +819,7 @@ function AdvancedPhone:showNotificationPopup(title, message, type)
     messageLabel.Position = UDim2.new(0, 10, 0.5, 0)
     messageLabel.BackgroundTransparency = 1
     messageLabel.Text = message
-    messageLabel.TextColor3 = Color3.white
+    messageLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     messageLabel.TextScaled = true
     messageLabel.Font = Enum.Font.Gotham
     messageLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -875,7 +888,7 @@ function AdvancedPhone:createAdvancedContactsApp()
     title.Position = UDim2.new(0, 70 * scale, 0, 15)
     title.BackgroundTransparency = 1
     title.Text = "👥 Contacts"
-    title.TextColor3 = Color3.white
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
     title.TextScaled = true
     title.Font = Enum.Font.GothamBold
     title.ZIndex = 7
@@ -888,7 +901,7 @@ function AdvancedPhone:createAdvancedContactsApp()
     addButton.BackgroundColor3 = Color3.fromRGB(76, 175, 80)
     addButton.BorderSizePixel = 0
     addButton.Text = "+"
-    addButton.TextColor3 = Color3.white
+    addButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     addButton.TextScaled = true
     addButton.Font = Enum.Font.GothamBold
     addButton.ZIndex = 7
@@ -927,7 +940,7 @@ function AdvancedPhone:createAdvancedContactsApp()
     searchBox.BackgroundTransparency = 1
     searchBox.Text = ""
     searchBox.PlaceholderText = "Search contacts..."
-    searchBox.TextColor3 = Color3.white
+    searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
     searchBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
     searchBox.TextScaled = true
     searchBox.Font = Enum.Font.Gotham
@@ -978,7 +991,7 @@ function AdvancedPhone:createAdvancedContactsApp()
         avatarText.Size = UDim2.new(1, 0, 1, 0)
         avatarText.BackgroundTransparency = 1
         avatarText.Text = string.sub(targetPlayer.Name, 1, 1):upper()
-        avatarText.TextColor3 = Color3.white
+        avatarText.TextColor3 = Color3.fromRGB(255, 255, 255)
         avatarText.TextScaled = true
         avatarText.Font = Enum.Font.GothamBold
         avatarText.ZIndex = 9
@@ -990,7 +1003,7 @@ function AdvancedPhone:createAdvancedContactsApp()
         nameLabel.Position = UDim2.new(0, 80 * scale, 0, 5)
         nameLabel.BackgroundTransparency = 1
         nameLabel.Text = targetPlayer.Name
-        nameLabel.TextColor3 = Color3.white
+        nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
         nameLabel.TextScaled = true
         nameLabel.Font = Enum.Font.GothamBold
         nameLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -1030,7 +1043,7 @@ function AdvancedPhone:createAdvancedContactsApp()
         callButton.BackgroundColor3 = Color3.fromRGB(76, 175, 80)
         callButton.BorderSizePixel = 0
         callButton.Text = "📞"
-        callButton.TextColor3 = Color3.white
+        callButton.TextColor3 = Color3.fromRGB(255, 255, 255)
         callButton.TextScaled = true
         callButton.Font = Enum.Font.GothamBold
         callButton.ZIndex = 8
@@ -1046,7 +1059,7 @@ function AdvancedPhone:createAdvancedContactsApp()
         videoButton.BackgroundColor3 = Color3.fromRGB(156, 39, 176)
         videoButton.BorderSizePixel = 0
         videoButton.Text = "📹"
-        videoButton.TextColor3 = Color3.white
+        videoButton.TextColor3 = Color3.fromRGB(255, 255, 255)
         videoButton.TextScaled = true
         videoButton.Font = Enum.Font.GothamBold
         videoButton.ZIndex = 8
@@ -1062,7 +1075,7 @@ function AdvancedPhone:createAdvancedContactsApp()
         messageButton.BackgroundColor3 = Color3.fromRGB(33, 150, 243)
         messageButton.BorderSizePixel = 0
         messageButton.Text = "💬"
-        messageButton.TextColor3 = Color3.white
+        messageButton.TextColor3 = Color3.fromRGB(255, 255, 255)
         messageButton.TextScaled = true
         messageButton.Font = Enum.Font.GothamBold
         messageButton.ZIndex = 8
