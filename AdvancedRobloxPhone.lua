@@ -22,6 +22,13 @@ AdvancedPhone.__index = AdvancedPhone
 function AdvancedPhone.new()
     local self = setmetatable({}, AdvancedPhone)
     
+    -- Get player reference safely
+    self.player = Players.LocalPlayer
+    if not self.player then
+        warn("Player not found! Make sure this is a LocalScript.")
+        return nil
+    end
+    
     -- Core Variables
     self.isPhoneOpen = false
     self.currentApp = "home"
@@ -85,7 +92,7 @@ function AdvancedPhone:createAdvancedGUI()
     self.screenGui.ResetOnSpawn = false
     self.screenGui.IgnoreGuiInset = true
     self.screenGui.DisplayOrder = 100
-    self.screenGui.Parent = player.PlayerGui
+    self.screenGui.Parent = self.player.PlayerGui
     
     -- Dynamic scaling system
     local screenSize = workspace.CurrentCamera.ViewportSize
@@ -845,7 +852,7 @@ function AdvancedPhone:setupAdvancedVoiceChat()
     if VoiceChatService then
         spawn(function()
             local success, enabled = pcall(function()
-                return VoiceChatService.IsVoiceEnabledForUserIdAsync(VoiceChatService, player.UserId)
+                return VoiceChatService.IsVoiceEnabledForUserIdAsync(VoiceChatService, self.player.UserId)
             end)
             
             if success then
@@ -1099,7 +1106,7 @@ function AdvancedPhone:createAdvancedContactsApp()
         end
         
         for _, targetPlayer in pairs(Players:GetPlayers()) do
-            if targetPlayer ~= player then
+            if targetPlayer ~= self.player then
                 if not searchText or searchText == "" or 
                    string.lower(targetPlayer.Name):find(string.lower(searchText)) then
                     createEnhancedContactEntry(targetPlayer)
@@ -1129,7 +1136,7 @@ end
 
 -- Initiate Advanced Call
 function AdvancedPhone:initiateAdvancedCall(targetPlayer, callType)
-    if not targetPlayer or targetPlayer == player then return end
+    if not targetPlayer or targetPlayer == self.player then return end
     
     print("📞 Initiating " .. callType .. " call to " .. targetPlayer.Name .. "...")
     
@@ -1363,31 +1370,36 @@ function AdvancedPhone:openAdvancedChat(targetPlayer)
     -- Implementation would go here
 end
 
--- Get player reference
-local player = Players.LocalPlayer
+-- Player reference will be handled inside the class
 
 -- Initialize the advanced phone system
 local advancedPhone = AdvancedPhone.new()
 
--- Enhanced welcome message
-print("🎉 Advanced Roblox Phone System v3.0 Loaded!")
-print("✨ Ultimate Edition Features:")
-print("  📱 Modern Android-style UI with animations")
-print("  📞 Voice & Video Calls with VoiceChat integration")
-print("  👥 Advanced Group Calls & Contacts")
-print("  💬 Enhanced Messaging System")
-print("  📷 Camera & Gallery")
-print("  🎵 Music Player")
-print("  🏪 App Store")
-print("  🔔 Smart Notifications")
-print("  ⚙️ Advanced Settings")
-print("  🔢 Calculator & Notes")
-print("")
-print("🎮 Universal Controls:")
-print("  📱 Click phone icon (right center) or Press 'P'")
-print("  📱 2-finger swipe (Mobile)")
-print("  📱 Gamepad controls (Console)")
-print("  📱 ESC to go back, 'N' for notifications")
-print("")
-print("🚀 All platforms supported with auto-scaling!")
-print("✅ Advanced Phone System ready!")
+-- Check if initialization was successful
+if advancedPhone then
+    -- Enhanced welcome message
+    print("🎉 Advanced Roblox Phone System v3.0 Loaded!")
+    print("✨ Ultimate Edition Features:")
+    print("  📱 Modern Android-style UI with animations")
+    print("  📞 Voice & Video Calls with VoiceChat integration")
+    print("  👥 Advanced Group Calls & Contacts")
+    print("  💬 Enhanced Messaging System")
+    print("  📷 Camera & Gallery")
+    print("  🎵 Music Player")
+    print("  🏪 App Store")
+    print("  🔔 Smart Notifications")
+    print("  ⚙️ Advanced Settings")
+    print("  🔢 Calculator & Notes")
+    print("")
+    print("🎮 Universal Controls:")
+    print("  📱 Click phone icon (right center) or Press 'P'")
+    print("  📱 2-finger swipe (Mobile)")
+    print("  📱 Gamepad controls (Console)")
+    print("  📱 ESC to go back, 'N' for notifications")
+    print("")
+    print("🚀 All platforms supported with auto-scaling!")
+    print("✅ Advanced Phone System ready!")
+else
+    warn("❌ Failed to initialize Advanced Phone System!")
+    warn("Make sure this script is running as a LocalScript in StarterPlayerScripts!")
+end
