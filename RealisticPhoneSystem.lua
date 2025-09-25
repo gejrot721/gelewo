@@ -405,52 +405,199 @@ function RealisticPhone:createPhysicalButtons()
     volumeDownCorner.Parent = volumeDown
 end
 
--- Create Toggle Button
+-- Create Toggle Button (Right Center Position)
 function RealisticPhone:createToggleButton()
+    -- Main toggle button container
+    local toggleContainer = Instance.new("Frame")
+    toggleContainer.Name = "ToggleContainer"
+    toggleContainer.Size = UDim2.new(0, 80 * self.scale, 0, 80 * self.scale)
+    toggleContainer.Position = UDim2.new(1, -100 * self.scale, 0.5, -40 * self.scale)
+    toggleContainer.BackgroundTransparency = 1
+    toggleContainer.ZIndex = 100
+    toggleContainer.Parent = self.screenGui
+    
+    -- Outer glow ring
+    local outerGlow = Instance.new("Frame")
+    outerGlow.Size = UDim2.new(1, 20, 1, 20)
+    outerGlow.Position = UDim2.new(0, -10, 0, -10)
+    outerGlow.BackgroundColor3 = Color3.fromRGB(0, 122, 255)
+    outerGlow.BackgroundTransparency = 0.9
+    outerGlow.BorderSizePixel = 0
+    outerGlow.ZIndex = 99
+    outerGlow.Parent = toggleContainer
+    
+    local outerCorner = Instance.new("UICorner")
+    outerCorner.CornerRadius = UDim.new(1, 0)
+    outerCorner.Parent = outerGlow
+    
+    -- Inner glow ring
+    local innerGlow = Instance.new("Frame")
+    innerGlow.Size = UDim2.new(1, 10, 1, 10)
+    innerGlow.Position = UDim2.new(0, -5, 0, -5)
+    innerGlow.BackgroundColor3 = Color3.fromRGB(0, 122, 255)
+    innerGlow.BackgroundTransparency = 0.7
+    innerGlow.BorderSizePixel = 0
+    innerGlow.ZIndex = 100
+    innerGlow.Parent = toggleContainer
+    
+    local innerCorner = Instance.new("UICorner")
+    innerCorner.CornerRadius = UDim.new(1, 0)
+    innerCorner.Parent = innerGlow
+    
+    -- Main toggle button
     local toggleButton = Instance.new("TextButton")
     toggleButton.Name = "PhoneToggle"
-    toggleButton.Size = UDim2.new(0, 60 * self.scale, 0, 60 * self.scale)
-    toggleButton.Position = UDim2.new(1, -80 * self.scale, 0.5, -30 * self.scale)
+    toggleButton.Size = UDim2.new(0, 70 * self.scale, 0, 70 * self.scale)
+    toggleButton.Position = UDim2.new(0.5, -35 * self.scale, 0.5, -35 * self.scale)
     toggleButton.BackgroundColor3 = Color3.fromRGB(0, 122, 255)
     toggleButton.BorderSizePixel = 0
     toggleButton.Text = "📱"
     toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     toggleButton.TextScaled = true
     toggleButton.Font = Enum.Font.GothamBold
-    toggleButton.ZIndex = 100
-    toggleButton.Parent = self.screenGui
+    toggleButton.ZIndex = 101
+    toggleButton.Parent = toggleContainer
     
     local toggleCorner = Instance.new("UICorner")
     toggleCorner.CornerRadius = UDim.new(1, 0)
     toggleCorner.Parent = toggleButton
     
-    -- Glow effect
-    local glow = Instance.new("Frame")
-    glow.Size = UDim2.new(1, 20, 1, 20)
-    glow.Position = UDim2.new(0, -10, 0, -10)
-    glow.BackgroundColor3 = Color3.fromRGB(0, 122, 255)
-    glow.BackgroundTransparency = 0.8
-    glow.BorderSizePixel = 0
-    glow.ZIndex = 99
-    glow.Parent = toggleButton
+    -- Button shadow
+    local buttonShadow = Instance.new("Frame")
+    buttonShadow.Size = UDim2.new(1, 6, 1, 6)
+    buttonShadow.Position = UDim2.new(0, -3, 0, -3)
+    buttonShadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    buttonShadow.BackgroundTransparency = 0.6
+    buttonShadow.BorderSizePixel = 0
+    buttonShadow.ZIndex = 100
+    buttonShadow.Parent = toggleButton
     
-    local glowCorner = Instance.new("UICorner")
-    glowCorner.CornerRadius = UDim.new(1, 0)
-    glowCorner.Parent = glow
+    local shadowCorner = Instance.new("UICorner")
+    shadowCorner.CornerRadius = UDim.new(1, 0)
+    shadowCorner.Parent = buttonShadow
     
+    -- Status indicator (shows if phone is open/closed)
+    local statusIndicator = Instance.new("Frame")
+    statusIndicator.Name = "StatusIndicator"
+    statusIndicator.Size = UDim2.new(0, 12 * self.scale, 0, 12 * self.scale)
+    statusIndicator.Position = UDim2.new(1, -15 * self.scale, 0, 5 * self.scale)
+    statusIndicator.BackgroundColor3 = Color3.fromRGB(255, 59, 48)
+    statusIndicator.BorderSizePixel = 0
+    statusIndicator.ZIndex = 102
+    statusIndicator.Parent = toggleContainer
+    
+    local statusCorner = Instance.new("UICorner")
+    statusCorner.CornerRadius = UDim.new(1, 0)
+    statusCorner.Parent = statusIndicator
+    
+    -- Status text
+    local statusText = Instance.new("TextLabel")
+    statusText.Size = UDim2.new(1, 0, 0, 15 * self.scale)
+    statusText.Position = UDim2.new(0, 0, 1, 5 * self.scale)
+    statusText.BackgroundTransparency = 1
+    statusText.Text = "CLOSED"
+    statusText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    statusText.TextScaled = true
+    statusText.Font = Enum.Font.Gotham
+    statusText.ZIndex = 101
+    statusText.Parent = toggleContainer
+    
+    -- Click functionality
     toggleButton.MouseButton1Click:Connect(function()
         self:togglePhone()
+        self:updateToggleButtonStatus()
     end)
     
-    -- Hover effects
+    -- Add tooltip functionality
+    local tooltip = Instance.new("TextLabel")
+    tooltip.Name = "Tooltip"
+    tooltip.Size = UDim2.new(0, 120 * self.scale, 0, 30 * self.scale)
+    tooltip.Position = UDim2.new(0, -60 * self.scale, 0, -40 * self.scale)
+    tooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    tooltip.BackgroundTransparency = 0.3
+    tooltip.BorderSizePixel = 0
+    tooltip.Text = "Click to Open/Close Phone"
+    tooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
+    tooltip.TextScaled = true
+    tooltip.Font = Enum.Font.Gotham
+    tooltip.Visible = false
+    tooltip.ZIndex = 103
+    tooltip.Parent = toggleContainer
+    
+    local tooltipCorner = Instance.new("UICorner")
+    tooltipCorner.CornerRadius = UDim.new(0, 8 * self.scale)
+    tooltipCorner.Parent = tooltip
+    
+    -- Show tooltip on hover
     toggleButton.MouseEnter:Connect(function()
-        TweenService:Create(toggleButton, TweenInfo.new(0.2), 
-            {Size = UDim2.new(0, 70 * self.scale, 0, 70 * self.scale)}):Play()
+        tooltip.Visible = true
+        TweenService:Create(tooltip, TweenInfo.new(0.2), 
+            {BackgroundTransparency = 0.1}):Play()
     end)
     
     toggleButton.MouseLeave:Connect(function()
-        TweenService:Create(toggleButton, TweenInfo.new(0.2), 
-            {Size = UDim2.new(0, 60 * self.scale, 0, 60 * self.scale)}):Play()
+        TweenService:Create(tooltip, TweenInfo.new(0.2), 
+            {BackgroundTransparency = 0.3}):Play()
+        wait(0.2)
+        tooltip.Visible = false
+    end)
+    
+    -- Enhanced hover effects
+    toggleButton.MouseEnter:Connect(function()
+        TweenService:Create(toggleButton, TweenInfo.new(0.3, Enum.EasingStyle.Elastic), 
+            {Size = UDim2.new(0, 80 * self.scale, 0, 80 * self.scale)}):Play()
+        TweenService:Create(outerGlow, TweenInfo.new(0.3), 
+            {BackgroundTransparency = 0.7}):Play()
+        TweenService:Create(innerGlow, TweenInfo.new(0.3), 
+            {BackgroundTransparency = 0.5}):Play()
+    end)
+    
+    toggleButton.MouseLeave:Connect(function()
+        TweenService:Create(toggleButton, TweenInfo.new(0.3, Enum.EasingStyle.Elastic), 
+            {Size = UDim2.new(0, 70 * self.scale, 0, 70 * self.scale)}):Play()
+        TweenService:Create(outerGlow, TweenInfo.new(0.3), 
+            {BackgroundTransparency = 0.9}):Play()
+        TweenService:Create(innerGlow, TweenInfo.new(0.3), 
+            {BackgroundTransparency = 0.7}):Play()
+    end)
+    
+    -- Press effect
+    toggleButton.MouseButton1Down:Connect(function()
+        TweenService:Create(toggleButton, TweenInfo.new(0.1), 
+            {Size = UDim2.new(0, 65 * self.scale, 0, 65 * self.scale)}):Play()
+    end)
+    
+    toggleButton.MouseButton1Up:Connect(function()
+        TweenService:Create(toggleButton, TweenInfo.new(0.1), 
+            {Size = UDim2.new(0, 70 * self.scale, 0, 70 * self.scale)}):Play()
+    end)
+    
+    -- Store references for status updates
+    self.toggleButton = toggleButton
+    self.statusIndicator = statusIndicator
+    self.statusText = statusText
+    self.toggleContainer = toggleContainer
+    
+    -- Add pulsing effect to make it more noticeable
+    self:startToggleButtonPulse()
+end
+
+-- Start Toggle Button Pulse Effect
+function RealisticPhone:startToggleButtonPulse()
+    spawn(function()
+        while true do
+            if self.toggleButton and self.toggleButton.Parent then
+                -- Pulse animation
+                TweenService:Create(self.toggleButton, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1), 
+                    {Size = UDim2.new(0, 75 * self.scale, 0, 75 * self.scale)}):Play()
+                wait(1)
+                TweenService:Create(self.toggleButton, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1), 
+                    {Size = UDim2.new(0, 70 * self.scale, 0, 70 * self.scale)}):Play()
+                wait(1)
+            else
+                wait(0.1)
+            end
+        end
     end)
 end
 
@@ -1027,6 +1174,21 @@ function RealisticPhone:togglePhone()
     end
 end
 
+-- Update Toggle Button Status
+function RealisticPhone:updateToggleButtonStatus()
+    if self.statusIndicator and self.statusText then
+        if self.isPhoneOpen then
+            self.statusIndicator.BackgroundColor3 = Color3.fromRGB(52, 199, 89) -- Green
+            self.statusText.Text = "OPEN"
+            self.statusText.TextColor3 = Color3.fromRGB(52, 199, 89)
+        else
+            self.statusIndicator.BackgroundColor3 = Color3.fromRGB(255, 59, 48) -- Red
+            self.statusText.Text = "CLOSED"
+            self.statusText.TextColor3 = Color3.fromRGB(255, 59, 48)
+        end
+    end
+end
+
 -- Open App
 function RealisticPhone:openApp(appId)
     if self.isLocked then
@@ -1096,6 +1258,20 @@ function RealisticPhone:setupRealisticBehavior()
                 end
             end
         end)
+        
+        -- Double tap to toggle phone (mobile)
+        local lastTapTime = 0
+        UserInputService.TouchTap:Connect(function(touchPositions, gameProcessed)
+            if gameProcessed then return end
+            
+            local currentTime = tick()
+            if currentTime - lastTapTime < 0.5 then
+                -- Double tap detected
+                self:togglePhone()
+                self:updateToggleButtonStatus()
+            end
+            lastTapTime = currentTime
+        end)
     end
     
     -- Keyboard shortcuts
@@ -1104,11 +1280,15 @@ function RealisticPhone:setupRealisticBehavior()
         
         if input.KeyCode == Enum.KeyCode.P then
             self:togglePhone()
+            self:updateToggleButtonStatus()
         elseif self.isPhoneOpen then
             if input.KeyCode == Enum.KeyCode.L then
                 self:lockPhone()
             elseif input.KeyCode == Enum.KeyCode.H then
                 self:goHome()
+            elseif input.KeyCode == Enum.KeyCode.Escape then
+                self:togglePhone()
+                self:updateToggleButtonStatus()
             end
         end
     end)
@@ -1327,11 +1507,13 @@ if realisticPhone then
     print("  🎵 System Sounds & Haptics")
     print("")
     print("🎮 CONTROLS:")
-    print("  📱 Click phone icon to toggle")
+    print("  📱 Click phone icon (right center) to toggle")
+    print("  📱 Double tap screen (mobile) to toggle")
+    print("  💻 Press 'P' or 'ESC' to toggle")
     print("  🔢 Enter passcode: 1234")
     print("  ⬆️ Swipe up for Control Center")
     print("  ⬇️ Swipe down for Notifications")
-    print("  💻 Press 'P' to toggle, 'L' to lock, 'H' for home")
+    print("  💻 Press 'L' to lock, 'H' for home")
     print("")
     print("✅ REALISTIC PHONE SYSTEM READY!")
 else
