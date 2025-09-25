@@ -132,7 +132,7 @@ PhoneConfig.Performance = {
 }
 
 -- Localization
-PhoneConfig.Language = "English"
+PhoneConfig.Language = "Indonesian"
 
 PhoneConfig.Texts = {
     English = {
@@ -156,7 +156,83 @@ PhoneConfig.Texts = {
         Online = "Online",
         Offline = "Offline",
         Busy = "Busy",
-        NoAnswer = "No Answer"
+        NoAnswer = "No Answer",
+        StartCall = "Start Call",
+        EndCall = "End Call",
+        JoinCall = "Join Call",
+        LeaveCall = "Leave Call",
+        InviteToCall = "Invite to Call",
+        CallHistory = "Call History",
+        MessageHistory = "Message History",
+        Settings = "Settings",
+        Volume = "Volume",
+        Microphone = "Microphone",
+        Speaker = "Speaker",
+        ConnectionStatus = "Connection Status",
+        Connected = "Connected",
+        Disconnected = "Disconnected",
+        Connecting = "Connecting...",
+        CallEnded = "Call Ended",
+        CallStarted = "Call Started",
+        UserJoined = "Joined",
+        UserLeft = "Left",
+        ErrorOccurred = "Error Occurred",
+        TryAgain = "Try Again",
+        Cancel = "Cancel",
+        Confirm = "Confirm",
+        Yes = "Yes",
+        No = "No",
+        OK = "OK"
+    },
+    
+    Indonesian = {
+        Phone = "Handphone",
+        Home = "Beranda",
+        Contacts = "Kontak",
+        Chat = "Pesan",
+        Calls = "Panggilan",
+        SearchPlayers = "Cari pemain...",
+        TypeMessage = "Ketik pesan...",
+        IncomingCall = "Panggilan masuk dari",
+        Answer = "Angkat",
+        Decline = "Tolak",
+        HangUp = "Tutup",
+        Mute = "Bisukan",
+        Unmute = "Suarakan",
+        QuickCall = "Panggilan Cepat",
+        QuickChat = "Chat Cepat",
+        GroupCall = "Panggilan Grup",
+        Contacts = "Kontak",
+        Online = "Online",
+        Offline = "Offline",
+        Busy = "Sibuk",
+        NoAnswer = "Tidak Menjawab",
+        StartCall = "Mulai Panggilan",
+        EndCall = "Akhiri Panggilan",
+        JoinCall = "Bergabung",
+        LeaveCall = "Keluar",
+        InviteToCall = "Undang ke Panggilan",
+        CallHistory = "Riwayat Panggilan",
+        MessageHistory = "Riwayat Pesan",
+        Settings = "Pengaturan",
+        Volume = "Volume",
+        Microphone = "Mikrofon",
+        Speaker = "Speaker",
+        ConnectionStatus = "Status Koneksi",
+        Connected = "Terhubung",
+        Disconnected = "Terputus",
+        Connecting = "Menghubungkan...",
+        CallEnded = "Panggilan Berakhir",
+        CallStarted = "Panggilan Dimulai",
+        UserJoined = "Bergabung",
+        UserLeft = "Keluar",
+        ErrorOccurred = "Terjadi Kesalahan",
+        TryAgain = "Coba Lagi",
+        Cancel = "Batal",
+        Confirm = "Konfirmasi",
+        Yes = "Ya",
+        No = "Tidak",
+        OK = "OK"
     }
 }
 
